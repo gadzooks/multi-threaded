@@ -2,12 +2,13 @@ package com.github.gadzooks.caching.lru;
 
 import com.github.gadzooks.caching.MyCache;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
 public class LruCache<K,V> extends MyCache<K,V> {
-    private final Map<K, Integer> usage;
-    private final Map<K, V> storage;
+    private volatile Map<K, Instant> usage;
+    private volatile Map<K, V> storage;
 
     // TODO Singleton needed
     public LruCache(int size) {
@@ -17,24 +18,21 @@ public class LruCache<K,V> extends MyCache<K,V> {
     }
 
     @Override
-    public V get(K k) {
+    public synchronized V get(K k) {
         if(storage.get(k) != null) {
-            int count = usage.get(k);
-            count++;
-            usage.put(k, count);
-
+            usage.put(k, Instant.now());
             return storage.get(k);
         } else
             return null;
     }
 
     @Override
-    public void put(K k, V v) {
+    public synchronized void put(K k, V v) {
         if(storage.size() == getSize()) {
-            int min = Integer.MAX_VALUE;
+            Instant min = Instant.MAX;
             K evictionCandidate = null;
-            for(Map.Entry<K, Integer> entry : usage.entrySet()) {
-                if(entry.getValue() < min) {
+            for(Map.Entry<K, Instant> entry : usage.entrySet()) {
+                if(entry.getValue().isBefore(min)) {
                     min = entry.getValue();
                     evictionCandidate = entry.getKey();
                 }
@@ -45,22 +43,17 @@ public class LruCache<K,V> extends MyCache<K,V> {
         }
 
         storage.put(k, v);
-        if (usage.containsKey(k)) {
-            int count = usage.get(k) + 1;
-            usage.put(k, count);
-        } else {
-            usage.put(k, 0);
-        }
+        usage.put(k, Instant.now());
     }
 
     @Override
-    public void clear() {
+    public synchronized void clear() {
         storage.clear();
         usage.clear();
     }
 
     @Override
-    public int capacity() {
+    public synchronized int capacity() {
         return storage.size();
     }
 }

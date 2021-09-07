@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.mapdb:thread-weaver:3.0.mapdb">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/mapdb/thread-weaver/3.0.mapdb/thread-weaver-3.0.mapdb.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/mapdb/thread-weaver/3.0.mapdb/thread-weaver-3.0.mapdb-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/mapdb/thread-weaver/3.0.mapdb/thread-weaver-3.0.mapdb-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
