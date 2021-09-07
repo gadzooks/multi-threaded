@@ -1,5 +1,6 @@
 package com.github.gadzooks.caching.lru;
 
+import com.github.gadzooks.caching.lru.LruCache;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

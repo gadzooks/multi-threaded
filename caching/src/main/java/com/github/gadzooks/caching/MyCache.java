@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 public abstract class MyCache<K, V> {
-    private int MAX_CACHE_SIZE = 1000;
+    private final int MAX_CACHE_SIZE = 1000;
     @Getter(AccessLevel.PUBLIC)
     private int size;
     public MyCache(int size) {
