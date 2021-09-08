@@ -1,16 +1,31 @@
 package com.github.gadzooks.caching.lru;
 
 import com.github.gadzooks.caching.MyCache;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Least Recently Used cache - will cache the latest N values.
+ *
+ * Thread safety - Creating LruCache is *NOT* thread safe and so should be created in a synchronized method.
+ * Once created, the cache instance *is* thread safe.
+ *
+ * @param <K> the type parameter for the cache key
+ * @param <V> the type parameter for the cache value
+ */
+@Slf4j
 public class LruCache<K,V> extends MyCache<K,V> {
     private volatile Map<K, Instant> usage;
     private volatile Map<K, V> storage;
 
-    // TODO Singleton needed
+    /**
+     * Instantiates a new Lru cache.
+     *
+     * @param size the size of the Lru cache
+     */
     public LruCache(int size) {
         super(size);
         usage = new HashMap<>();
@@ -39,7 +54,7 @@ public class LruCache<K,V> extends MyCache<K,V> {
             }
             storage.remove(evictionCandidate);
             usage.remove(evictionCandidate);
-            System.out.println("ejecting " + evictionCandidate.toString());
+            log.debug("ejecting " + evictionCandidate.toString());
         }
 
         storage.put(k, v);
