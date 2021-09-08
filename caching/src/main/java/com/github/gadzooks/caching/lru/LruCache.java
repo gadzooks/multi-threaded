@@ -18,6 +18,7 @@ import java.util.Map;
  */
 @Slf4j
 public class LruCache<K,V> extends MyCache<K,V> {
+    // NOTE : usage and storage need to be volatile since they are shared between threads
     private volatile Map<K, Instant> usage;
     private volatile Map<K, V> storage;
 
@@ -33,6 +34,13 @@ public class LruCache<K,V> extends MyCache<K,V> {
     }
 
     @Override
+    public synchronized V delete(K k) {
+        usage.remove(k);
+        return storage.remove(k);
+    }
+
+    @Override
+    // NOTE : all access to storage / usage hashes needs to be synchronized.
     public synchronized V get(K k) {
         if(storage.get(k) != null) {
             usage.put(k, Instant.now());
@@ -42,6 +50,7 @@ public class LruCache<K,V> extends MyCache<K,V> {
     }
 
     @Override
+    // NOTE : all access to storage / usage hashes needs to be synchronized.
     public synchronized void put(K k, V v) {
         if(storage.size() == getSize()) {
             Instant min = Instant.MAX;
@@ -62,12 +71,14 @@ public class LruCache<K,V> extends MyCache<K,V> {
     }
 
     @Override
+    // NOTE : all access to storage / usage hashes needs to be synchronized.
     public synchronized void clear() {
         storage.clear();
         usage.clear();
     }
 
     @Override
+    // NOTE : all access to storage / usage hashes needs to be synchronized.
     public synchronized int capacity() {
         return storage.size();
     }

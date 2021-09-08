@@ -28,6 +28,14 @@ public abstract class MyCache<K, V> {
     }
 
     /**
+     * Delete value v corresponding to key k
+     *
+     * @param k the key to be deleted
+     * @return the corresponding value v
+     */
+    public abstract V delete(K k);
+
+    /**
      * Get value corresponding to the key passed in.
      *
      * @param k the k
