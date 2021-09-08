@@ -1,6 +1,8 @@
 package com.github.gadzooks.caching.lru;
 
-import com.github.gadzooks.caching.lru.LruCache;
+import com.github.gadzooks.caching.MyCache;
+import com.github.gadzooks.caching.factory.MyCacheFactory;
+import com.github.gadzooks.caching.factory.MyCacheFactoryImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,22 +24,23 @@ class LruCacheTest {
 
     @Test
     public void testLruBasic() {
-        LruCache<String, String> cache = new LruCache<>(2);
+        MyCacheFactoryImpl<String, String> factory = new MyCacheFactoryImpl<>();
+        MyCache<String, String> lruCache = factory.create(MyCacheFactory.LRU_CACHE_TYPE, 2);
 
         //Given
-        cache.put("123", "123");
-        cache.put("456", "456");
+        lruCache.put("123", "123");
+        lruCache.put("456", "456");
 
-        assertEquals(2,cache.capacity());
+        assertEquals(2,lruCache.capacity());
 
         //When
-        cache.get("123");
-        cache.put("567", "567");
+        lruCache.get("123");
+        lruCache.put("567", "567");
 
         //Then
-        assertEquals(2,cache.capacity());
-        assertNotNull(cache.get("123"));
-        assertNotNull(cache.get("567"));
+        assertEquals(2,lruCache.capacity());
+        assertNotNull(lruCache.get("123"));
+        assertNotNull(lruCache.get("567"));
     }
 
 
